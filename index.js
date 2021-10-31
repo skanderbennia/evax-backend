@@ -1,8 +1,11 @@
 const mongoose = require('mongoose');
 const express = require('express');
+const dotenv = require('dotenv');
 
+const appointement_router = require('./appoitements_maker/appointement-generate');
+
+dotenv.config();
 const app = express();
-const { port } = process.env;
 
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
@@ -20,7 +23,8 @@ mongoose
   .then(() => {
     console.log('DB connection is successful');
   });
-
+app.use(appointement_router);
+const port = 3007;
 app.listen(port, () => {
   console.log(`the server is listening on port ${port}`);
 });

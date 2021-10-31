@@ -12,6 +12,6 @@ const appointementSchema = mongoose.Schema({
   center_id: { type: mongoose.Schema.Types.ObjectId, ref: 'center' },
   user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
 });
-const Appointement = mongoose.model('UniYear', appointementSchema);
+const Appointement = mongoose.model('appointements', appointementSchema);
 
 module.exports = Appointement;

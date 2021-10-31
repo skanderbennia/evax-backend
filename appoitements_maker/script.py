@@ -22,7 +22,7 @@ e_date = datetime(date_2[2], date_2[1], date_2[0], time_2[0], time_2[1], time_2[
 #interval = sys.argv[5] * 60 ["10"]
 intervall = sys.argv[5]
 
-interval_time = timedelta(seconds=int(intervall))
+interval_time = timedelta(seconds=int(intervall)*60)
 
 center_capacity = sys.argv[6]
 
