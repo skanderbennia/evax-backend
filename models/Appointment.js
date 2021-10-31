@@ -10,7 +10,11 @@ const appointementSchema = mongoose.Schema({
     required: [true],
   },
   center_id: { type: mongoose.Schema.Types.ObjectId, ref: 'center' },
-  user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user',
+    default: null,
+  },
 });
 const Appointement = mongoose.model('appointements', appointementSchema);
 
