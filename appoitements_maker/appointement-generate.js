@@ -27,7 +27,6 @@ router.get('/appointements', (req, res, next) => {
       await Appointement.create({
         date: appointement[0],
         time: appointement[1],
-        center_id: 1,
       });
       index += 1;
       if (index <= filtered_apppointement.length) res.send('done!');
