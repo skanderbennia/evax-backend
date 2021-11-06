@@ -1,0 +1,41 @@
+centre :
+	-nom du centre
+	-coordonné du centre
+	-id_journee_porte_ouvert: 
+pharmacie:
+	-nom du pharmacie
+	-coordonné du pharmacie
+	-propriétaire
+personne
+	-nom
+	-prenom
+	-cin
+	-adresse email
+	-mode_inscrit: false|true (false: journée porte-ouverte| true: inscrit sur siteweb)
+	type_vaccin: enum()
+	nb_dose:
+operateur
+	-username
+	-password
+	-tel
+	-cin
+	-....
+rendez-vous:
+	-date
+	-etat :false|true
+	-center_id
+	-user_id
+
+journée porte ouverte:
+	-label
+	-date
+	-centre_id
+	
+volontaire:
+	-nom
+	-prenom
+	-age
+	-tel
+	-cin
+	operateur:false|true
+	equipe_volantaire:enum()

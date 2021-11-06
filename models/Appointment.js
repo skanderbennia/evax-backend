@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const appointementSchema = mongoose.Schema({
+const appointmentSchema = mongoose.Schema({
   date: {
     type: String,
     required: [true],
@@ -9,13 +9,17 @@ const appointementSchema = mongoose.Schema({
     type: String,
     required: [true],
   },
-  center_id: { type: mongoose.Schema.Types.ObjectId, ref: 'center' },
+  center_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'center',
+    default: null,
+  },
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
     default: null,
   },
 });
-const Appointement = mongoose.model('appointements', appointementSchema);
+const Appointment = mongoose.model('appointments', appointmentSchema);
 
-module.exports = Appointement;
+module.exports = Appointment;
