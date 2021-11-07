@@ -21,23 +21,7 @@ const User = mongoose.model(
       min: 6,
       max: 1024,
     },
-<<<<<<< Updated upstream
-    phone: {
-      type: String,
-      required: true,
-      min: 6,
-      max: 1024,
-    },
-    address: {
-      type: String,
-      required: false,
-      min: 6,
-      max: 1024,
-    },
-    registry_mode: {
-=======
     mode_inscription: {
->>>>>>> Stashed changes
       type: Boolean,
       required: true,
     },
@@ -51,18 +35,10 @@ const User = mongoose.model(
     first_dose: {
       type: String,
       default: 'none',
-<<<<<<< Updated upstream
-      required: false,
-=======
->>>>>>> Stashed changes
     },
     second_dose: {
       type: String,
       default: 'none',
-<<<<<<< Updated upstream
-      required: false,
-=======
->>>>>>> Stashed changes
     },
   })
 );
