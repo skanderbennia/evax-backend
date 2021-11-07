@@ -21,7 +21,19 @@ const User = mongoose.model(
       min: 6,
       max: 1024,
     },
-    mode_inscription: {
+    address: {
+      type: String,
+      required: false,
+      min: 6,
+      max: 1024,
+    },
+    phone: {
+      type: String,
+      required: true,
+      min: 6,
+      max: 1024,
+    },
+    registry_mode: {
       type: Boolean,
       required: true,
     },
