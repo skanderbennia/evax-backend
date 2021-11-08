@@ -61,6 +61,7 @@ const swaggerOptions = {
       version: '1.0.0',
       description: `<i>Group of endpoints that manage the CRUD operations for Evax-react</i>`,
       contact: {},
+      security: [{ bearerAuth: [] }],
       servers: ['http://localhost:4000/'],
     },
   },
