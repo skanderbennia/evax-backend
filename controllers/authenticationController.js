@@ -74,8 +74,7 @@ router.post('/register', async (req, res) => {
   const isEmailExist = await User.findOne({
     email: req.body.email,
   });
-  console.log(req.body.email);
-  console.log(isEmailExist);
+
   // throw error when email already registered
   if (isEmailExist)
     return res.status(400).json({
@@ -91,6 +90,7 @@ router.post('/register', async (req, res) => {
     email: req.body.email,
     phone: req.body.phone,
     registry_mode: req.body.registry_mode,
+    role: req.body.role,
     password,
   });
 
@@ -153,13 +153,21 @@ router.post('/login', async (req, res) => {
     });
 
   // create token
-  const token = jwt.sign(
+  const signToken = (id, role) =>
+    jwt.sign({ id, role }, process.env.JWT_SECRET);
+  const token = signToken(user._id, user.role);
+  res.send({
+    status: 200,
+    token,
+    userInformation: user,
+  });
+  /* const token = jwt.sign(
     {
       name: user.name,
       id: user.id,
     },
     process.env.TOKEN_SECRET
-  );
+  ); 
 
   res.header('auth-token', token).json({
     error: null,
@@ -168,7 +176,7 @@ router.post('/login', async (req, res) => {
       user,
       message: 'user connected',
     },
-  });
+  }); */
 });
 
 module.exports = router;
