@@ -10,6 +10,7 @@ const User = require('./models/User');
 // Controllers
 const appointment_router = require('./appoitments_maker/appointment-generate');
 const centerConroller = require('./controllers/centerController');
+const volunteerController = require('./controllers/volunteerController');
 
 const authentication = require('./controllers/authenticationController');
 const { protect, restrictTo } = require('./controllers/auth-security');
@@ -48,6 +49,7 @@ db.once('open', () => console.log('Connected to database ------'));
 // Routes
 app.use('/appointments', appointment_router);
 app.use('/centers', centerConroller);
+app.use('/volunteers', volunteerController);
 app.use('/auth', authentication);
 app.use('/test', protect, restrictTo('admin'), test);
 
