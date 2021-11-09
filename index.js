@@ -5,16 +5,11 @@ const dotenv = require('dotenv');
 const swaggerJSDOC = require('swagger-jsdoc');
 const swaggerUI = require('swagger-ui-express');
 // Models
+const cors = require('cors');
 const User = require('./models/User');
 // Controllers
 const appointment_router = require('./appoitments_maker/appointment-generate');
 const centerConroller = require('./controllers/centerController');
-
-const swaggerJSDOC = require('swagger-jsdoc');
-const swaggerUI = require('swagger-ui-express');
-
-const cors = require('cors');
-const User = require('./models/User');
 
 const authentication = require('./controllers/authenticationController');
 const { protect, restrictTo } = require('./controllers/auth-security');
