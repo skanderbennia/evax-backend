@@ -14,13 +14,11 @@
     "ecmaVersion": 12
   },
   "rules": {
-    "prettier/prettier": "error",
     "no-console": "off",
     "camelcase": "off",
     "no-unused-vars": "off",
     "consistent-return": "off",
     "no-underscore-dangle": "off",
     "no-return-await": "off"
-
   }
 }
