@@ -10,6 +10,7 @@ const User = require('./models/User');
 // Controllers
 const appointment_router = require('./appoitments_maker/appointment-generate');
 const centerConroller = require('./controllers/centerController');
+const pharmacyController = require("./controllers/PharmacyController")
 
 const authentication = require('./controllers/authenticationController');
 const { protect, restrictTo } = require('./controllers/auth-security');
@@ -50,6 +51,7 @@ app.use('/appointments', appointment_router);
 app.use('/centers', centerConroller);
 app.use('/auth', authentication);
 app.use('/test', protect, restrictTo('admin'), test);
+app.use("/pharmacy", pharmacyController)
 
 // Server
 const port = 4000 || process.env.port;
