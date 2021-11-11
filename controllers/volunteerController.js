@@ -46,9 +46,13 @@ const Volunteer= require('../models/Volunteer');
  *           description: The Volunteer team
  *
  *       example:
- *         name: "Centre Khaznadar"
- *         address: "Khaznadar Bardo"
- *         jpo_id: "12568e7b2971820a1c78294f"
+ *         firstName: "Centre Khaznadar"
+ *         lastName: "Khaznadar Bardo"
+ *         age: "12568e7b2971820a1c78294f"
+ *         phoneNumber: "1234567"
+ *         cin: "12345678"
+ *         operator: true
+ *         volunteer_team: "Tunisian Red Crescent"
  */
 
 /**
