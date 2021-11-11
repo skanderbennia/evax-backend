@@ -27,8 +27,8 @@ describe("Pharmacy Crud", () => {
             .set("content-type", "application/json").then((res) => {
                 expect(res.status).to.equal(200);
                 expect(res.body).to.be.a("array");
-                done()
-            })
+
+            }).then(done)
 
     });
     it("POST pharmacy - Success", async () => {
