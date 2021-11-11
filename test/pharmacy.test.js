@@ -18,7 +18,7 @@ describe("Pharmacy Crud", () => {
         mongoose.connect(DB, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-        }, done);
+        }, () => done());
     })
     it("GET ALL pharmacy - Success", (done) => {
 
@@ -28,7 +28,7 @@ describe("Pharmacy Crud", () => {
                 expect(res.status).to.equal(200);
                 expect(res.body).to.be.a("array");
 
-            }).then(done)
+            }).then(() => done())
 
     });
     it("POST pharmacy - Success", async () => {
