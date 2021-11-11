@@ -143,10 +143,11 @@ router.get('/all', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    const volunteer = await Volunteer.find({
-      _id: req.params.id,
-    });
-    res.json(volunteer);
+    const volunteer = await Volunteer.findById(
+      req.params.id
+    );
+    if(!volunteer) return  res.status(404).json({message : "volunteer not found"});
+    res.status(200).json(volunteer);
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -191,7 +192,8 @@ router.put('/:id', async (req, res) => {
   const updateObject = req.body;
 
   try {
-    await Volunteer.findOneAndUpdate(filter, updateObject);
+  const volunteer =  await  Volunteer.findOneAndUpdate(filter, updateObject);
+  if(!volunteer) return  res.status(404).json({message : "volunteer not found"});
     res.status(203).json({
       message: 'Volunteer updated with success',
     });
@@ -237,6 +239,7 @@ router.delete('/:id', async (req, res) => {
         message: `${err}`,
       });
     }
+    if(!docs) return  res.status(404).json({message : "volunteer not found"});
     return res.status(204).json({
       message: 'Deleted Volunteer with success',
     });
