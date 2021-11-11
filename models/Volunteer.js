@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const volunteerSchema = mongoose.Schema({
   firstName: {
     type: String,
-    required: true,
+     required: true,
     min: 6,
     max: 255,
   },
@@ -14,7 +14,7 @@ const volunteerSchema = mongoose.Schema({
     max: 255,
   },
   age: {
-    type: String,
+    type: Number,
     required: true,
     min: 6,
     max: 255,
@@ -35,17 +35,17 @@ const volunteerSchema = mongoose.Schema({
   operator: {
     type: Boolean,
     required: true,
-  
+
   },
-  
+
   volunteer_team: {
     type: String,
     required: true,
-    default:'Tunisian Red Crescent',
+    default: 'Tunisian Red Crescent',
     enum: ['Tunisian Red Crescent', 'Tunisian Scouts', 'Associamed'],
   },
 });
 
-const   Volunteer = mongoose.model('volunteer', volunteerSchema);
+const Volunteer = mongoose.model('volunteer', volunteerSchema);
 
 module.exports = Volunteer;

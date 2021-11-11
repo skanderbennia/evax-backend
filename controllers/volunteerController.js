@@ -1,7 +1,5 @@
-
-
 const router = require('express').Router();
-const Volunteer= require('../models/Volunteer');
+const Volunteer = require('../models/Volunteer');
 
 /**
  * @swagger
@@ -29,7 +27,7 @@ const Volunteer= require('../models/Volunteer');
  *           type: string
  *           description: The Volunteer lasttName
  *         age:
- *           type: string
+ *           type: integer
  *           description: The Volunteer age
  *         phoneNumber:
  *           type: string
@@ -46,9 +44,9 @@ const Volunteer= require('../models/Volunteer');
  *           description: The Volunteer team
  *
  *       example:
- *         firstName: "Centre Khaznadar"
- *         lastName: "Khaznadar Bardo"
- *         age: "12568e7b2971820a1c78294f"
+ *         firstName: "Nour El Houda "
+ *         lastName: "Boumenjel"
+ *         age: 53
  *         phoneNumber: "1234567"
  *         cin: "12345678"
  *         operator: true
@@ -56,11 +54,11 @@ const Volunteer= require('../models/Volunteer');
  */
 
 /**
- * * @swagger
+ * @swagger
  * /volunteers/:
  *  post:
- *   summary: Creates a new Volunteer
- *   tags: [volunteer]
+ *   summary: Creates a new volunteer
+ *   tags: [Volunteer]
  *
  *   requestBody:
  *    required: true
@@ -70,7 +68,7 @@ const Volunteer= require('../models/Volunteer');
  *          $ref: '#/components/schemas/Volunteer'
  *
  *   responses:
- *     200:
+ *     201:
  *       description: Creates a new Volunteer
  *       content:
  *         application/json:
@@ -81,7 +79,6 @@ const Volunteer= require('../models/Volunteer');
  *
  */
 
-
 router.post('/', (req, res) => {
   console.log(req.body);
   const new_volunteer = new Volunteer(req.body);
@@ -91,7 +88,7 @@ router.post('/', (req, res) => {
       return res.status(500).send(err);
     }
     console.log('Volunteer added with success');
-    return res.status(200).send(doc);
+    return res.status(201).send(doc);
   });
 });
 
@@ -117,12 +114,11 @@ router.get('/all', async (req, res) => {
     });
   }
 });
-
 /**
  * @swagger
  * /volunteers/{id}:
  *  get:
- *    summary: Returns the list of volunteers by id
+ *    summary: Returns the list of volunteer by id
  *    tags: [Volunteer]
  *    parameters:
  *      - in : path
@@ -133,15 +129,59 @@ router.get('/all', async (req, res) => {
  
  *    responses:
  *      200:
- *        description: The list of volunteers by id
+ *        description: The list of volunteer by id
  *        content:
  *          application/json:
  *            schema:
  *              type: array
  *              items:
- *                $ref: '#/components/schemas/Instance'
+ *                $ref: '#/components/schemas/Volunteer'
  *      404:
- *        description: no volunteers
+ *        description: no volunteer
+ *
+ */
+
+router.get('/:id', async (req, res) => {
+  try {
+    const volunteer = await Volunteer.find({
+      _id: req.params.id,
+    });
+    res.json(volunteer);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+});
+
+/**
+ * @swagger
+ * /volunteers/{id}:
+ *  put:
+ *   summary: Updates volunteer by id
+ *   tags: [Volunteer]
+ *   parameters:
+ *      - in : path
+ *        name: id
+ *        schema:
+ *          type: string
+ *        required: true
+ *   requestBody:
+ *    required: true
+ *    content:
+ *      application/json:
+ *        schema:
+ *          $ref: '#/components/schemas/Volunteer'
+ *
+ *   responses:
+ *     203:
+ *       description: Updates volunteer by id
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               $ref: '#/components/schemas/Volunteer'
  *
  */
 router.put('/:id', async (req, res) => {
@@ -152,7 +192,7 @@ router.put('/:id', async (req, res) => {
 
   try {
     await Volunteer.findOneAndUpdate(filter, updateObject);
-    res.status(500).json({
+    res.status(203).json({
       message: 'Volunteer updated with success',
     });
   } catch (err) {
@@ -175,7 +215,7 @@ router.put('/:id', async (req, res) => {
  *        required: true
  *
  *   responses:
- *     200:
+ *     204:
  *       description: Deletes a volunteer
  *       content:
  *         application/json:
@@ -197,7 +237,7 @@ router.delete('/:id', async (req, res) => {
         message: `${err}`,
       });
     }
-    return res.status(200).json({
+    return res.status(204).json({
       message: 'Deleted Volunteer with success',
     });
   });
