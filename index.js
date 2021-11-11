@@ -11,7 +11,8 @@ const User = require('./models/User');
 const appointment_router = require('./appoitments_maker/appointment-generate');
 const centerConroller = require('./controllers/centerController');
 const volunteerController = require('./controllers/volunteerController');
-
+const pharmacyController = require("./controllers/PharmacyController")
+const operatorController = require("./controllers/OperatorController")
 const authentication = require('./controllers/authenticationController');
 const { protect, restrictTo } = require('./controllers/auth-security');
 const test = require('./controllers/test');
@@ -52,6 +53,8 @@ app.use('/centers', centerConroller);
 app.use('/volunteers', volunteerController);
 app.use('/auth', authentication);
 app.use('/test', protect, restrictTo('admin'), test);
+app.use("/pharmacy", pharmacyController)
+app.use("/operator", operatorController)
 
 // Server
 const port = 4000 || process.env.port;
