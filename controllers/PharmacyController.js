@@ -52,19 +52,19 @@ const Pharmacy = require('../models/Pharmacy');
  *           schema:
  *             type: array
  *             items:
- *               $ref: '#/components/schemas/Pharmacy'
+ *               $ref: '#/components/schemas/Pharmacies'
  *
  */
 router.post('/', (req, res) => {
-    console.log(req.body);
+
     const new_pharmacy = new Pharmacy(req.body);
 
     new_pharmacy.save((err, doc) => {
         if (err) {
             return res.status(500).send(err);
         }
-        console.log('Pharmacy added with success');
-        return res.status(200).send(doc);
+
+        return res.status(201).send(doc);
     });
 });
 
@@ -119,9 +119,10 @@ router.get('/all', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
-        const pharmacy = await Pharmacy.find({
-            _id: req.params.id,
-        });
+        const pharmacy = await Pharmacy.findById(
+            req.params.id,
+        );
+        if (!pharmacy) res.status(404).json({ message: "pharmacy not found" })
         res.json(pharmacy);
     } catch (error) {
         res.status(500).json({
@@ -167,8 +168,9 @@ router.put('/:id', async (req, res) => {
     const updateObject = req.body;
 
     try {
-        await Pharmacy.findOneAndUpdate(filter, updateObject);
-        res.status(500).json({
+        const pharmacy_updated = await Pharmacy.findOneAndUpdate(filter, updateObject);
+        if (!pharmacy_updated) res.status(404).json({ message: "pharmacy not found" })
+        res.status(203).json({
             message: 'Pharmacy updated with success',
         });
     } catch (err) {
@@ -212,7 +214,8 @@ router.delete('/:id', async (req, res) => {
                 message: `${err}`,
             });
         }
-        return res.status(200).json({
+        if (!docs) return res.status(404).json({ message: "pharmacy not found" })
+        return res.status(204).json({
             message: 'Deleted pharmacy with success',
         });
     });

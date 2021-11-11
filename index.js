@@ -94,3 +94,5 @@ const swaggerOptions = {
 
 const swaggerDocs = swaggerJSDOC(swaggerOptions);
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+
+module.exports = app;
