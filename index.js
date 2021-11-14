@@ -73,7 +73,7 @@ app.listen(port, () => {
 });
 */
 
-// Documentation
+//  Documentation
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
