@@ -52,7 +52,7 @@ app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
 
-//  Documentation
+// Documentation
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
