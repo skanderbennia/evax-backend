@@ -45,7 +45,7 @@ const Center = require('../models/Center');
  *          $ref: '#/components/schemas/Center'
  *
  *   responses:
- *     200:
+ *     201:
  *       description: Creates a new Center
  *       content:
  *         application/json:
@@ -64,7 +64,7 @@ router.post('/', (req, res) => {
       return res.status(500).send(err);
     }
     console.log('Center added with success');
-    return res.status(200).send(doc);
+    return res.status(201).send(doc);
   });
 });
 
@@ -75,7 +75,7 @@ router.post('/', (req, res) => {
  *     tags: [Center]
  *     description: Get all centers
  *     responses:
- *       200:
+ *       201:
  *         description: Success
  *
  */
@@ -104,7 +104,7 @@ router.get('/all', async (req, res) => {
  *        required: true
  
  *    responses:
- *      200:
+ *      201:
  *        description: The list of centers by id
  *        content:
  *          application/json:
@@ -119,9 +119,8 @@ router.get('/all', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    const center = await Center.find({
-      _id: req.params.id,
-    });
+    const center = await Center.findById(req.params.id);
+    if (!center) res.status(404).json({ message: 'center not found' });
     res.json(center);
   } catch (error) {
     res.status(500).json({
@@ -150,7 +149,7 @@ router.get('/:id', async (req, res) => {
  *          $ref: '#/components/schemas/Center'
  *
  *   responses:
- *     200:
+ *     201:
  *       description: Updates center by id
  *       content:
  *         application/json:
@@ -167,9 +166,10 @@ router.put('/:id', async (req, res) => {
   const updateObject = req.body;
 
   try {
-    await Center.findOneAndUpdate(filter, updateObject);
-    res.status(500).json({
-      message: 'Center updated with success',
+    const center_updated = await Center.findOneAndUpdate(filter, updateObject);
+    if (!center_updated) res.status(404).json({ message: 'center not found' });
+    res.status(203).json({
+      message: 'center updated with success',
     });
   } catch (err) {
     res.status(500).send(err);
@@ -191,7 +191,7 @@ router.put('/:id', async (req, res) => {
  *        required: true
  *
  *   responses:
- *     200:
+ *     201:
  *       description: Deletes a center
  *       content:
  *         application/json:
@@ -212,7 +212,8 @@ router.delete('/:id', async (req, res) => {
         message: `${err}`,
       });
     }
-    return res.status(200).json({
+    if (!docs) return res.status(404).json({ message: 'Center not found' });
+    return res.status(201).json({
       message: 'Deleted center with success',
     });
   });
