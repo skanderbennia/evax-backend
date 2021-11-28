@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --delay 500ms app.js ",
-    "test": "nyc mocha --timeout 20000 './test' "
+    "test": "nyc mocha --timeout 10000 './test' ",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix --ext .js,.jsx ."
   },
   "repository": {
     "type": "git",
