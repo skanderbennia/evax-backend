@@ -78,7 +78,7 @@ router.post('/register', async (req, res) => {
   // throw error when email already registered
   if (isEmailExist)
     return res.status(400).json({
-      error: 'Email already exists',
+      message: 'Email already exists',
     });
 
   // hash the password
@@ -96,11 +96,8 @@ router.post('/register', async (req, res) => {
 
   try {
     const savedUser = await user.save();
-    res.json({
-      error: null,
-      data: {
-        userId: savedUser,
-      },
+    res.status(201).json({
+      data: savedUser,
     });
   } catch (err) {
     res.status(400).json({
@@ -142,22 +139,21 @@ router.post('/login', async (req, res) => {
   // throw error when email is wrong
   if (!user)
     return res.status(400).json({
-      error: 'Email is wrong',
+      message: 'Email or password are wrong',
     });
 
   // check for password
   const validPassword = await bcrypt.compare(req.body.password, user.password);
   if (!validPassword)
     return res.status(400).json({
-      error: 'Password is wrong',
+      message: 'Email or password are wrong',
     });
 
   // create token
   const signToken = (id, role) =>
     jwt.sign({ id, role }, process.env.JWT_SECRET);
   const token = signToken(user._id, user.role);
-  res.send({
-    status: 200,
+  res.status(201).send({
     token,
     userInformation: user,
   });
