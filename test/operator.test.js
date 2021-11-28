@@ -80,7 +80,7 @@ describe("Operator Crud", () => {
                 cin: "operator cin"
             })
 
-        expect(res.status).to.equal(203);
+        expect(res.status).to.equal(201);
         expect(res.body).to.be.a("object");
 
     });

@@ -80,14 +80,14 @@ const Volunteer = require('../models/Volunteer');
  */
 
 router.post('/', (req, res) => {
-  console.log(req.body);
+  
   const new_volunteer = new Volunteer(req.body);
 
   new_volunteer.save((err, doc) => {
     if (err) {
       return res.status(500).send(err);
     }
-    console.log('Volunteer added with success');
+    
     return res.status(201).send(doc);
   });
 });

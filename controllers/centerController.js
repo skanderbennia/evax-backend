@@ -56,14 +56,13 @@ const Center = require('../models/Center');
  *
  */
 router.post('/', (req, res) => {
-  console.log(req.body);
   const new_center = new Center(req.body);
 
   new_center.save((err, doc) => {
     if (err) {
       return res.status(500).send(err);
     }
-    console.log('Center added with success');
+    
     return res.status(201).send(doc);
   });
 });

@@ -66,7 +66,7 @@ describe("Volunteer Crud", () => {
         const res = await request(app)
             .get(`/volunteers/618ba7e28d56354b3cf89213`)
             .set("content-type", "application/json")
-             console.log(res.body)
+            
         expect(res.status).to.equal(404);
 
 

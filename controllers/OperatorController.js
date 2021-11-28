@@ -62,15 +62,15 @@ const Operator = require('../models/Operator');
  *
  */
 router.post('/', (req, res) => {
-    console.log(req.body);
+    
     const new_operator = new Operator(req.body);
 
     new_operator.save((err, doc) => {
         if (err) {
             return res.status(500).send(err);
         }
-        console.log('Operator added with success');
-        return res.status(200).send(doc);
+      
+        return res.status(201).send(doc);
     });
 });
 
@@ -125,10 +125,11 @@ router.get('/all', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
-        const operator = await Operator.find({
-            _id: req.params.id,
-        });
-        res.json(operator);
+        const operator = await Operator.findById(req.params.id);
+        if(!operator){
+            return res.status(404).json({message:"operator not found"})
+        }
+        res.status(200).json(operator);
     } catch (error) {
         res.status(500).json({
             message: error.message,
@@ -173,8 +174,11 @@ router.put('/:id', async (req, res) => {
     const updateObject = req.body;
 
     try {
-        await Operator.findOneAndUpdate(filter, updateObject);
-        res.status(500).json({
+         const updatedOperator = await Operator.findOneAndUpdate(filter, updateObject);
+        if(!updatedOperator){
+            return res.status(404).json({message:"operator no found"})
+        }
+        res.status(201).json({
             message: 'Operator updated with success',
         });
     } catch (err) {
@@ -218,7 +222,8 @@ router.delete('/:id', async (req, res) => {
                 message: `${err}`,
             });
         }
-        return res.status(200).json({
+        if (!docs) return res.status(404).json({ message: "operator not found" })
+        return res.status(204).json({
             message: 'Deleted operator with success',
         });
     });
