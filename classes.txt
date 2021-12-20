@@ -12,8 +12,7 @@ personne
 	-cin
 	-adresse email
 	-mode_inscrit: false|true (false: journée porte-ouverte| true: inscrit sur siteweb)
-	type_vaccin: enum()
-	nb_dose:
+	
 operateur
 	-username
 	-password
@@ -27,7 +26,6 @@ rendez-vous:
 	-user_id
 
 journée porte ouverte:
-	-label
 	-date
 	-centre_id
 	
@@ -39,3 +37,21 @@ volontaire:
 	-cin
 	operateur:false|true
 	equipe_volantaire:enum()
+
+rapport 
+
+	type_vaccin: enum()
+	nb_dose:
+	....
+	id_rendez_vous:
+	id_personne: 
+
+vaccin:
+	label: pfizer
+
+vaccin_center:
+	quantité:
+	center_id
+	vaccin_id
+
+

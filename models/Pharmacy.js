@@ -19,7 +19,7 @@ const pharmacySchema = mongoose.Schema({
         min: 6,
         max: 255,
     },
-});
+},{versionKey:false});
 
 const Pharmacy = mongoose.model('pharmacies', pharmacySchema);
 
