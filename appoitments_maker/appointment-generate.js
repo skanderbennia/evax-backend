@@ -13,30 +13,44 @@ const router = express.Router();
  *     Appointment:
  *       type: object
  *       required:
- *         - date
- *         - time
- *         - center_id
- *         - user_id
+ *         -start_date,
+ *         -end_date,
+ *         -start_hour,
+ *         -end_hour,
+ *         -center_id,
+ *         -interval,
+ *         -center_capacity,
  *       properties:
  *         id:
  *           type: string
  *           description: The auto-generated id of the instance (project)
- *         date:
+ *         start_date:
  *           type: string
- *           description: The appointment date
- *         time:
+ *           description: The appointment start_date
+ *         end_date:
  *           type: string
- *           description: The appointment time
+ *           description: The appointment end_date
+ *         start_hour:
+ *           type: string
+ *           description: The appointment start_hour
+ *         end_hour:
+ *           type: string
+ *           description: The appointment end_hour
  *         center_id:
  *           type: string
- *         user_id:
+ *         interval:
+ *           type: string
+ *         center_capacity:
  *           type: string
  *
  *       example:
- *         date: "06/11/2021"
- *         time: "10:15:00"
- *         center_id: "61868e7b2971820a1c95294c"
- *         user_id: "12568e7b2971820a1c78294f"
+ *         start_date: "06/11/2021"
+ *         end_date: "06/11/2021"
+ *         start_hour: "10:15:00"
+ *         end_hour: "19:00:00"
+ *         center_capacity: "20"
+ *         interval: "10"
+ *         center_id: "61869ae67082e5a03d8766b2"
  */
 
 /**
@@ -65,6 +79,7 @@ const router = express.Router();
  *
  */
 router.post('/', async (req, res, next) => {
+  console.log(req.body);
   const {
     start_date,
     end_date,
@@ -82,6 +97,7 @@ router.post('/', async (req, res, next) => {
       _id: center_id,
     });
   } catch (error) {
+    console.log('here');
     res.status(500).json({
       message: error.message,
     });
@@ -93,7 +109,7 @@ router.post('/', async (req, res, next) => {
     mode: 'text',
     pythonPath: '/usr/bin/python',
     pythonOptions: ['-u'], // get print results in real-time
-    scriptPath: './appoitements_maker/',
+    scriptPath: './appoitments_maker/',
     args: [
       start_date,
       end_date,
