@@ -13,6 +13,8 @@ const centerConroller = require('./controllers/centerController');
 const volunteerController = require('./controllers/volunteerController');
 const pharmacyController = require("./controllers/PharmacyController")
 const operatorController = require("./controllers/OperatorController")
+const vaccineController = require("./controllers/VaccineController")
+const vaccinecenterController = require("./controllers/VaccineCenterController")
 const authentication = require('./controllers/authenticationController');
 const { protect, restrictTo } = require('./controllers/auth-security');
 const test = require('./controllers/test');
@@ -55,6 +57,8 @@ app.use('/auth', authentication);
 app.use('/test', protect, restrictTo('admin'), test);
 app.use("/pharmacy", pharmacyController)
 app.use("/operator", operatorController)
+app.use("/vaccine", vaccineController)
+app.use("/vaccinecenter", vaccinecenterController)
 
 // Server
 const port = 4000 || process.env.port;
