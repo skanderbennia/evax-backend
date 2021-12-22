@@ -89,7 +89,6 @@ router.post('/register', async (req, res) => {
     name: req.body.name,
     email: req.body.email,
     phone: req.body.phone,
-    registry_mode: req.body.registry_mode,
     role: req.body.role,
     password,
   });
