@@ -3,6 +3,7 @@ const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
+const Citizen = require('../models/Citizen');
 
 /**
  * @swagger
@@ -95,8 +96,13 @@ router.post('/register', async (req, res) => {
 
   try {
     const savedUser = await user.save();
+    const citizen = new Citizen({
+      registry_mode: req.body.registry_mode,
+      user_id: savedUser.id,
+    });
+    citizen.save();
     res.status(201).json({
-      data: savedUser,
+      data: [savedUser, citizen],
     });
   } catch (err) {
     res.status(400).json({
