@@ -163,22 +163,6 @@ router.post('/login', async (req, res) => {
     token,
     userInformation: user,
   });
-  /* const token = jwt.sign(
-    {
-      name: user.name,
-      id: user.id,
-    },
-    process.env.TOKEN_SECRET
-  ); 
-
-  res.header('auth-token', token).json({
-    error: null,
-    data: {
-      token,
-      user,
-      message: 'user connected',
-    },
-  }); */
 });
 
 module.exports = router;
