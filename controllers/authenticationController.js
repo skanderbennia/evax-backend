@@ -96,9 +96,10 @@ router.post('/register', async (req, res) => {
 
   try {
     const savedUser = await user.save();
+
     const citizen = new Citizen({
       registry_mode: req.body.registry_mode,
-      user_id: savedUser.id,
+      user: savedUser.id,
     });
     citizen.save();
     res.status(201).json({
