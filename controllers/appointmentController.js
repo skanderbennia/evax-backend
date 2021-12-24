@@ -38,21 +38,25 @@ const router = express.Router();
  *
  */
 router.post('/book', async (req, res, next) => {
-  const { center_id, date_suggestion, user_id } = req.body;
-  // add 2 day to the date
-  const transformDate = new Date(
-    new Date(date_suggestion).getTime() + 86400000 * 2
-  );
-  const appointment_free = await Appointment.findOneAndUpdate(
-    {
-      user_id: null,
-      center_id,
-      date: { $gte: transformDate },
-    },
-    { user_id },
-    { new: true }
-  );
-  res.send(appointment_free);
+  try {
+    const { center_id, date_suggestion, user_id } = req.body;
+    // add 2 day to the date
+    const transformDate = new Date(
+      new Date(date_suggestion).getTime() + 86400000 * 2
+    );
+    const appointment_free = await Appointment.findOneAndUpdate(
+      {
+        user_id: null,
+        center_id,
+        date: { $gte: transformDate },
+      },
+      { user_id },
+      { new: true }
+    );
+    res.send(appointment_free);
+  } catch (err) {
+    res.status(500).send(err);
+  }
 });
 
 module.exports = router;
