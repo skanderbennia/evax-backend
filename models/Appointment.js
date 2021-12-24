@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const appointmentSchema = mongoose.Schema({
   date: {
-    type: String,
+    type: Date,
     required: [true],
   },
   time: {
@@ -20,6 +20,7 @@ const appointmentSchema = mongoose.Schema({
     default: null,
   },
 });
+
 const Appointment = mongoose.model('appointments', appointmentSchema);
 
 module.exports = Appointment;
