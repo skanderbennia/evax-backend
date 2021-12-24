@@ -77,7 +77,9 @@ router.post('/center', async (req, res, next) => {
     const date_debut_timestamp = new Date(date_debut);
     const date_fin_timestamp = new Date(date_fin);
     // create apponitment with time and date and add the users and the center id
-    console.log(date_fin_timestamp - date_debut_timestamp);
+    if (!date_debut) {
+      return res.status(500);
+    }
     for (
       let k = date_debut_timestamp.getTime();
       k <= date_fin_timestamp.getTime();
@@ -103,9 +105,9 @@ router.post('/center', async (req, res, next) => {
       }
       // console.log(new Date(k).toISOString().split('T')[0]);
     }
-    res.status(200).send('appointment created');
+    res.status(200).json({ message: 'appointments created' });
   } catch (err) {
-    res.status(500).send(err);
+    res.status(500).json(err);
   }
 });
 module.exports = router;
