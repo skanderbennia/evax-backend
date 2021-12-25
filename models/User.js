@@ -33,30 +33,11 @@ const User = mongoose.model(
       min: 6,
       max: 1024,
     },
-    registry_mode: {
-      type: Boolean,
-      required: true,
-    },
-    type_vaccin: {
-      type: String,
-      required: false,
-      default: 'none',
-      min: 6,
-      max: 1024,
-    },
-    first_dose: {
-      type: String,
-      default: 'none',
-    },
-    second_dose: {
-      type: String,
-      default: 'none',
-    },
     role: {
       type: String,
       required: true,
-      default: 'basic',
-      enum: ['basic', 'operator', 'admin'],
+      default: 'citizen',
+      enum: ['citizen', 'operator', 'admin'],
     },
   })
 );

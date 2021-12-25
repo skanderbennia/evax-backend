@@ -13,7 +13,7 @@ const centerSchema = mongoose.Schema({
     min: 6,
     max: 255,
   },
-  jpo_id: {
+  jpo: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'jpo',
     default: null,

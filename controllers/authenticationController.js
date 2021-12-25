@@ -3,6 +3,7 @@ const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
+const Citizen = require('../models/Citizen');
 
 /**
  * @swagger
@@ -89,15 +90,20 @@ router.post('/register', async (req, res) => {
     name: req.body.name,
     email: req.body.email,
     phone: req.body.phone,
-    registry_mode: req.body.registry_mode,
     role: req.body.role,
     password,
   });
 
   try {
     const savedUser = await user.save();
+
+    const citizen = new Citizen({
+      registry_mode: req.body.registry_mode,
+      user: savedUser.id,
+    });
+    citizen.save();
     res.status(201).json({
-      data: savedUser,
+      data: [savedUser, citizen],
     });
   } catch (err) {
     res.status(400).json({
@@ -157,22 +163,6 @@ router.post('/login', async (req, res) => {
     token,
     userInformation: user,
   });
-  /* const token = jwt.sign(
-    {
-      name: user.name,
-      id: user.id,
-    },
-    process.env.TOKEN_SECRET
-  ); 
-
-  res.header('auth-token', token).json({
-    error: null,
-    data: {
-      token,
-      user,
-      message: 'user connected',
-    },
-  }); */
 });
 
 module.exports = router;

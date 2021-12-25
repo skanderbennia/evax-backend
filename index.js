@@ -12,11 +12,15 @@ const appointment_router = require('./appoitments_maker/appointment-generate');
 const centerConroller = require('./controllers/centerController');
 const jpoConroller = require('./controllers/jpoController');
 const volunteerController = require('./controllers/volunteerController');
-const pharmacyController = require("./controllers/PharmacyController")
-const operatorController = require("./controllers/OperatorController")
+const pharmacyController = require('./controllers/PharmacyController');
+const operatorController = require('./controllers/OperatorController');
+const citizenController = require('./controllers/citizenController');
+
 const authentication = require('./controllers/authenticationController');
+const contactController = require('./controllers/contactController');
 const { protect, restrictTo } = require('./controllers/auth-security');
 const test = require('./controllers/test');
+const sendmail = require('./utils/mailer');
 
 dotenv.config();
 
@@ -55,25 +59,16 @@ app.use('/jpo', jpoConroller);
 app.use('/volunteers', volunteerController);
 app.use('/auth', authentication);
 app.use('/test', protect, restrictTo('admin'), test);
-app.use("/pharmacy", pharmacyController)
-app.use("/operator", operatorController)
+app.use('/pharmacy', pharmacyController);
+app.use('/operator', operatorController);
+app.use('/citizen', citizenController);
+app.use('/contact', contactController);
 
 // Server
 const port = 4000 || process.env.port;
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
-
-/* app.get('/', async (req, res) => {
-  const user = await User.create({
-    name: 'skander',
-  });
-  user.save();
-  res.send('done!');
-});
-
-});
-*/
 
 //  Documentation
 const swaggerOptions = {
