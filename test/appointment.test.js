@@ -65,4 +65,19 @@ describe('Appointment Crud', () => {
       .catch();
     done();
   });
+  it('VALIDATE Appointement - Success', (done) => {
+    request(app)
+      .post('/appointments/validate')
+      .set('content-type', 'application/json')
+      .send({
+        appointment_id: '61c5f55f2e5d9f4796649e61',
+        vaccin_id: '61c1f91f212ef4299e572c11',
+      })
+      .then((res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.be.have.property('message');
+        expect(res.body.message).to.be.a('string');
+      });
+    done();
+  });
 });

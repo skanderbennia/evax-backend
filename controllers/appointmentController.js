@@ -1,6 +1,7 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const Appointment = require('../models/Appointment');
-
+const Report = require('../models/Report');
 const router = express.Router();
 /**
  * @swagger
@@ -60,5 +61,24 @@ router.post('/book', async (req, res, next) => {
     res.status(500).send(err);
   }
 });
+router.post('/validate', async (req, res, next) => {
+  try {
+    const session = await mongoose.startSession();
 
+    await session.withTransaction(async () => {
+      const { appointment_id, vaccin_id } = req.body;
+      const appointment = await Appointment.findById(appointment_id);
+      const report = new Report({
+        user_id: appointment.user_id,
+        appointment_id: appointment._id,
+        vaccin_id: vaccin_id,
+      });
+      report.save();
+    });
+    res.status(200).json({ message: 'appointment validated' });
+    session.endSession();
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
 module.exports = router;

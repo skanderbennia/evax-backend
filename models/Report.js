@@ -9,7 +9,7 @@ const Report = mongoose.model(
       ref: 'vaccines',
       default: null,
     },
-    appointement_id: {
+    appointment_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'appointments',
       default: null,
