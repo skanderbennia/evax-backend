@@ -8,7 +8,7 @@ const swaggerUI = require('swagger-ui-express');
 const cors = require('cors');
 const User = require('./models/User');
 // Controllers
-const appointment_router = require('./appoitments_maker/appointment-generate');
+// const appointment_router = require('./appoitments_maker/appointment-generate');
 const centerConroller = require('./controllers/centerController');
 const jpoConroller = require('./controllers/jpoController');
 const volunteerController = require('./controllers/volunteerController');
@@ -22,6 +22,8 @@ const contactController = require('./controllers/contactController');
 const { protect, restrictTo } = require('./controllers/auth-security');
 const test = require('./controllers/test');
 const sendmail = require('./utils/mailer');
+const submitAppointement = require('./appoitments_maker/submit_appointement');
+const appointmentController = require('./controllers/appointmentController');
 
 dotenv.config();
 
@@ -54,7 +56,9 @@ db.on('error', (error) => console.error(error));
 db.once('open', () => console.log('Connected to database ------'));
 
 // Routes
-app.use('/appointments', appointment_router);
+// app.use('/appointments', appointment_router);
+app.use('/appointments', submitAppointement);
+app.use('/appointments', appointmentController);
 app.use('/centers', centerConroller);
 app.use('/jpo', jpoConroller);
 app.use('/volunteers', volunteerController);
@@ -88,6 +92,7 @@ const swaggerOptions = {
   },
   apis: [
     `${__dirname}/appoitments_maker/appointment-generate.js`,
+    `${__dirname}/appoitments_maker/submit_appointement.js`,
     `${__dirname}/controllers/**.js`,
   ],
 };
