@@ -13,9 +13,10 @@ const centerConroller = require('./controllers/centerController');
 const jpoConroller = require('./controllers/jpoController');
 const volunteerController = require('./controllers/volunteerController');
 const pharmacyController = require('./controllers/PharmacyController');
-const operatorController = require('./controllers/OperatorController');
 const citizenController = require('./controllers/citizenController');
-
+const operatorController = require('./controllers/OperatorController');
+const vaccineController = require('./controllers/VaccineController');
+const vaccinecenterController = require('./controllers/VaccineCenterController');
 const authentication = require('./controllers/authenticationController');
 const contactController = require('./controllers/contactController');
 const { protect, restrictTo } = require('./controllers/auth-security');
@@ -59,10 +60,12 @@ app.use('/jpo', jpoConroller);
 app.use('/volunteers', volunteerController);
 app.use('/auth', authentication);
 app.use('/test', protect, restrictTo('admin'), test);
-app.use('/pharmacy', pharmacyController);
 app.use('/operator', operatorController);
 app.use('/citizen', citizenController);
 app.use('/contact', contactController);
+app.use('/pharmacy', pharmacyController);
+app.use('/vaccine', vaccineController);
+app.use('/vaccinecenter', vaccinecenterController);
 
 // Server
 const port = 4000 || process.env.port;
