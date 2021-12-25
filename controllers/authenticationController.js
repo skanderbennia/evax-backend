@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const Citizen = require('../models/Citizen');
+const sendMail = require('../utils/mailer');
 
 /**
  * @swagger
@@ -102,6 +103,17 @@ router.post('/register', async (req, res) => {
       user: savedUser.id,
     });
     citizen.save();
+
+    let message =
+      'Vous êtes désormais inscrit à Evax. Vous recevrez bientot la date de votre rendez-vous de vaccination';
+
+    sendMail(req.body.email, message, (err, data) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log('success');
+      }
+    });
     res.status(201).json({
       data: [savedUser, citizen],
     });
