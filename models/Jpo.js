@@ -7,6 +7,13 @@ const jpoSchema = mongoose.Schema({
     ref: 'centers',
     default: null,
   },
+  volunteers_id: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'volunteers',
+      default: null,
+    },
+  ],
 });
 
 const Jpo = mongoose.model('jpos', jpoSchema);
