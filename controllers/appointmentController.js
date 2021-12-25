@@ -32,9 +32,11 @@ const router = express.Router();
  *       content:
  *         application/json:
  *           schema:
- *             type: array
- *             items:
- *               $ref: '#/components/schemas/Appointment'
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  $ref: '#/components/schemas/Appointment'
  *
  */
 router.post('/book', async (req, res, next) => {
@@ -53,7 +55,7 @@ router.post('/book', async (req, res, next) => {
       { user_id },
       { new: true }
     );
-    res.send(appointment_free);
+    res.status(200).json({ data: appointment_free });
   } catch (err) {
     res.status(500).send(err);
   }
