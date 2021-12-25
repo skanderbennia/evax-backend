@@ -6,7 +6,6 @@ const swaggerJSDOC = require('swagger-jsdoc');
 const swaggerUI = require('swagger-ui-express');
 // Models
 const cors = require('cors');
-const User = require('./models/User');
 // Controllers
 // const appointment_router = require('./appoitments_maker/appointment-generate');
 const centerConroller = require('./controllers/centerController');
@@ -21,7 +20,6 @@ const authentication = require('./controllers/authenticationController');
 const contactController = require('./controllers/contactController');
 const { protect, restrictTo } = require('./controllers/auth-security');
 const test = require('./controllers/test');
-const sendmail = require('./utils/mailer');
 const submitAppointement = require('./appoitments_maker/submit_appointement');
 const appointmentController = require('./controllers/appointmentController');
 
