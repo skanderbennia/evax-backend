@@ -9,12 +9,12 @@ const vaccinecenterSchema = mongoose.Schema({
   },
   vaccine_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'vaccine',
+    ref: 'vaccines',
     default: null,
   },
   center_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'center',
+    ref: 'centers',
     default: null,
   },
 });
