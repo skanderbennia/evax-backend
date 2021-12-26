@@ -1,6 +1,7 @@
 const router = require('express').Router();
+const mongoose = require('mongoose');
 const Operator = require('../models/Operator');
-
+const User = require('../models/User');
 /**
  * @swagger
  * components:
@@ -8,32 +9,20 @@ const Operator = require('../models/Operator');
  *     Operator:
  *       type: object
  *       required:
- *         - name
- *         - password
- *         - tel
- *         - cin
+ *         - user_id
+ *         - center_id
  *       properties:
- *         id:
+ *         user_id:
  *           type: string
- *           description: The auto-generated id of the instance (project)
- *         name:
+ *           description: user id of the account
+ *         center_id:
  *           type: string
- *           description: The Operator name
- *         password:
- *           type: string
- *           description: The Operator password
- *         tel:
- *           type: string
- *           description: The Operator tel
- *         cin:
- *           type: string
- *           description: The Operator cin
+ *           description: id of center where the operator belongs
+
  *
  *       example:
- *         name: "Ghada Ben Dhiab"
- *         password: "ghadaghada"
- *         tel: "29000000"
- *         cin: "44443333"
+ *         user_id: "61c43f9b06fdbbe91b55c3b2"
+ *         center_id: "61c43f9b06fdbbe91b55c3b2"
  */
 
 /**
@@ -48,8 +37,26 @@ const Operator = require('../models/Operator');
  *    content:
  *      application/json:
  *        schema:
- *          $ref: '#/components/schemas/Operator'
- *
+ *          type: object
+ *          properties:
+ *              name:
+ *                  type: string
+ *                  example: nameExample
+ *              email:
+ *                  type: string
+ *                  example: email@gmail.com
+ *              password:
+ *                  type: string
+ *                  example: 12345678
+ *              phone:
+ *                  type: string
+ *                  example: 12345678
+ *              address:
+ *                  type: string
+ *                  example: Ariana
+ *              role:
+ *                  type: string
+ *                  example: operator
  *   responses:
  *     200:
  *       description: Creates a new Operator
@@ -61,17 +68,24 @@ const Operator = require('../models/Operator');
  *               $ref: '#/components/schemas/Operator'
  *
  */
-router.post('/', (req, res) => {
-    
-    const new_operator = new Operator(req.body);
-
-    new_operator.save((err, doc) => {
-        if (err) {
-            return res.status(500).send(err);
-        }
-      
-        return res.status(201).send(doc);
+router.post('/', async (req, res) => {
+  const session = await mongoose.startSession();
+  try {
+    await session.withTransaction(async () => {
+      const user_account = await User.create(req.body);
+      const new_operator = await Operator.create({
+        user_id: user_account._id,
+      });
+      const created_operator = await Operator.findById(
+        new_operator._id
+      ).populate('user_id');
+      res.status(200).json({ operator: created_operator });
     });
+
+    session.endSession();
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 /**
@@ -86,14 +100,14 @@ router.post('/', (req, res) => {
  *
  */
 router.get('/all', async (req, res) => {
-    try {
-        const operators = await Operator.find();
-        res.json(operators);
-    } catch (error) {
-        res.status(500).json({
-            message: error.message,
-        });
-    }
+  try {
+    const operators = await Operator.find().populate('user_id');
+    res.json(operators);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
 });
 
 /**
@@ -124,17 +138,17 @@ router.get('/all', async (req, res) => {
  */
 
 router.get('/:id', async (req, res) => {
-    try {
-        const operator = await Operator.findById(req.params.id);
-        if(!operator){
-            return res.status(404).json({message:"operator not found"})
-        }
-        res.status(200).json(operator);
-    } catch (error) {
-        res.status(500).json({
-            message: error.message,
-        });
+  try {
+    const operator = await Operator.findById(req.params.id).populate('user_id');
+    if (!operator) {
+      return res.status(404).json({ message: 'operator not found' });
     }
+    res.status(200).json(operator);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
 });
 
 /**
@@ -154,7 +168,26 @@ router.get('/:id', async (req, res) => {
  *    content:
  *      application/json:
  *        schema:
- *          $ref: '#/components/schemas/Operator'
+ *          type: object
+ *          properties:
+ *              name:
+ *                  type: string
+ *                  example: nameExample
+ *              email:
+ *                  type: string
+ *                  example: email@gmail.com
+ *              password:
+ *                  type: string
+ *                  example: 12345678
+ *              phone:
+ *                  type: string
+ *                  example: 12345678
+ *              address:
+ *                  type: string
+ *                  example: Ariana
+ *              role:
+ *                  type: string
+ *                  example: operator
  *
  *   responses:
  *     200:
@@ -168,22 +201,25 @@ router.get('/:id', async (req, res) => {
  *
  */
 router.put('/:id', async (req, res) => {
-    const filter = {
-        _id: req.params.id,
-    };
-    const updateObject = req.body;
+  const session = await mongoose.startSession();
+  try {
+    await session.withTransaction(async () => {
+      const selected_operator = await Operator.findById(req.params.id);
+      if (!selected_operator) {
+        res.status(404).json({ message: 'operator not found' });
+      }
+      await User.findByIdAndUpdate(selected_operator.user_id, req.body);
 
-    try {
-         const updatedOperator = await Operator.findOneAndUpdate(filter, updateObject);
-        if(!updatedOperator){
-            return res.status(404).json({message:"operator no found"})
-        }
-        res.status(201).json({
-            message: 'Operator updated with success',
-        });
-    } catch (err) {
-        res.status(500).send(err);
-    }
+      const updated_operator = await Operator.findById(
+        selected_operator._id
+      ).populate('user_id');
+      res.status(201).json({ operator: updated_operator });
+    });
+
+    session.endSession();
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 /**
@@ -212,21 +248,21 @@ router.put('/:id', async (req, res) => {
  *
  */
 router.delete('/:id', async (req, res) => {
-    const filter = {
-        _id: req.params.id,
-    };
+  const filter = {
+    _id: req.params.id,
+  };
 
-    Operator.findOneAndDelete(filter, (err, docs) => {
-        if (err) {
-            return res.status(500).json({
-                message: `${err}`,
-            });
-        }
-        if (!docs) return res.status(404).json({ message: "operator not found" })
-        return res.status(204).json({
-            message: 'Deleted operator with success',
-        });
+  Operator.findOneAndDelete(filter, (err, docs) => {
+    if (err) {
+      return res.status(500).json({
+        message: `${err}`,
+      });
+    }
+    if (!docs) return res.status(404).json({ message: 'operator not found' });
+    return res.status(204).json({
+      message: 'Deleted operator with success',
     });
+  });
 });
 
 module.exports = router;
