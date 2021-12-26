@@ -62,7 +62,7 @@ router.post('/', (req, res) => {
     if (err) {
       return res.status(500).send(err);
     }
-    
+
     return res.status(201).send(doc);
   });
 });
@@ -110,7 +110,7 @@ router.get('/all', async (req, res) => {
  *            schema:
  *              type: array
  *              items:
- *                $ref: '#/components/schemas/Instance'
+ *                $ref: '#/components/schemas/Center'
  *      404:
  *        description: no centers
  *

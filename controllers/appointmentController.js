@@ -78,7 +78,6 @@ router.post('/validate', async (req, res, next) => {
         vaccin_id,
       });
       report.save();
-      await Appointment.findByIdAndDelete(appointment_id);
     });
     res.status(200).json({ message: 'appointment validated' });
     session.endSession();
