@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Appointment = require('../models/Appointment');
 const Report = require('../models/Report');
+
 const router = express.Router();
 /**
  * @swagger
@@ -74,7 +75,7 @@ router.post('/validate', async (req, res, next) => {
       const report = new Report({
         user_id: appointment.user_id,
         appointment_id: appointment._id,
-        vaccin_id: vaccin_id,
+        vaccin_id,
       });
       report.save();
       await Appointment.findByIdAndDelete(appointment_id);
