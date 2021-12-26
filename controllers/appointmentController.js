@@ -1,5 +1,7 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const Appointment = require('../models/Appointment');
+const Report = require('../models/Report');
 
 const router = express.Router();
 /**
@@ -60,5 +62,28 @@ router.post('/book', async (req, res, next) => {
     res.status(500).send(err);
   }
 });
+router.post('/validate', async (req, res, next) => {
+  try {
+    const session = await mongoose.startSession();
 
+    const { appointment_id, vaccin_id } = req.body;
+    const appointment = await Appointment.findById(appointment_id);
+    if (!appointment) {
+      return res.status(404).json({ message: 'Appointment not found' });
+    }
+    await session.withTransaction(async () => {
+      const report = new Report({
+        user_id: appointment.user_id,
+        appointment_id: appointment._id,
+        vaccin_id,
+      });
+      report.save();
+      await Appointment.findByIdAndDelete(appointment_id);
+    });
+    res.status(200).json({ message: 'appointment validated' });
+    session.endSession();
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
 module.exports = router;
