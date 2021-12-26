@@ -206,7 +206,7 @@ router.put('/:id', async (req, res) => {
     await session.withTransaction(async () => {
       const selected_operator = await Operator.findById(req.params.id);
       if (!selected_operator) {
-        res.status(404).json({ message: 'operator not found' });
+        return res.status(404).json({ message: 'operator not found' });
       }
       await User.findByIdAndUpdate(selected_operator.user_id, req.body);
 
