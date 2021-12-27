@@ -85,4 +85,23 @@ router.post('/validate', async (req, res, next) => {
     res.status(500).send(err);
   }
 });
+/**
+ * @swagger
+ * /appointments/all:
+ *   get:
+ *     tags: [Appointment]
+ *     description: Get all Appointment
+ *     responses:
+ *       201:
+ *         description: Success
+ *
+ */
+router.get('/all', async (req, res, next) => {
+  try {
+    const appointments = await Appointment.find({ user_id: { $ne: null } });
+    res.status(200).json(appointments);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
 module.exports = router;
