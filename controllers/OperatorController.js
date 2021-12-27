@@ -2,6 +2,7 @@ const router = require('express').Router();
 const mongoose = require('mongoose');
 const Operator = require('../models/Operator');
 const User = require('../models/User');
+const sendMail = require('../utils/mailer');
 /**
  * @swagger
  * components:
@@ -73,12 +74,22 @@ router.post('/', async (req, res) => {
   try {
     await session.withTransaction(async () => {
       const user_account = await User.create(req.body);
+
       const new_operator = await Operator.create({
         user_id: user_account._id,
       });
       const created_operator = await Operator.findById(
         new_operator._id
       ).populate('user_id');
+      sendMail(
+        'evaxdelatunisie@gmail.com',
+        user_account.email,
+        'Contact',
+        `your password : ${req.body.password}`,
+        (err, data) => {
+          console.log(data);
+        }
+      );
       res.status(200).json({ operator: created_operator });
     });
 
