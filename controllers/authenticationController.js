@@ -115,7 +115,7 @@ router.post('/register', async (req, res) => {
       }
     });
     res.status(201).json({
-      data: [savedUser, citizen],
+      message: 'Registration successfull',
     });
   } catch (err) {
     res.status(400).json({
