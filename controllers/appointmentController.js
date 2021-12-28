@@ -62,6 +62,37 @@ router.post('/book', async (req, res, next) => {
     res.status(500).send(err);
   }
 });
+
+/**
+ * @swagger
+ * /appointments/validate:
+ *  post:
+ *   summary: the operator validate an appointment for a user
+ *   tags: [Appointment]
+ *
+ *   requestBody:
+ *    required: true
+ *    content:
+ *      application/json:
+ *        schema:
+ *          type: object
+ *          properties:
+ *              appointment_id:
+ *                type: string
+ *                example: 61c43f9b06fdbbe91b55c3b2
+ *              vaccin_id:
+ *                 type: string
+ *                 example: 61c43f9b06fdbbe91b55c3b2
+ *
+ *   responses:
+ *     200:
+ *       description: validate appointment
+ *       content:
+ *         application/json:
+ *           schema:
+ *              type: string
+ *              example: Appointment Validated !
+ */
 router.post('/validate', async (req, res, next) => {
   try {
     const session = await mongoose.startSession();
