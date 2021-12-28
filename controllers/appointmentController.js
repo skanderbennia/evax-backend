@@ -98,7 +98,9 @@ router.post('/validate', async (req, res, next) => {
  */
 router.get('/all', async (req, res, next) => {
   try {
-    const appointments = await Appointment.find({ user_id: { $ne: null } });
+    const appointments = await Appointment.find({
+      user_id: { $ne: null },
+    }).populate('user_id');
     res.status(200).json(appointments);
   } catch (err) {
     res.status(500).send(err);
