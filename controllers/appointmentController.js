@@ -137,4 +137,37 @@ router.get('/all', async (req, res, next) => {
     res.status(500).send(err);
   }
 });
+router.get('/report', async (req, res, next) => {
+  try {
+    const sysdat = new Date();
+    // find person who go appointment out dated
+    const appointments = await Appointment.find({
+      date: { $lte: sysdat },
+      reported: false,
+      user_id: { $ne: null },
+    });
+    console.log(appointments);
+    appointments.forEach(async (appointment) => {
+      await Appointment.findOneAndUpdate(
+        {
+          date: {
+            $gte: new Date(new Date(appointment.date).getTime() + 86400000 * 7),
+          },
+          user_id: null,
+        },
+        { user_id: appointment.user_id }
+      );
+      await Appointment.findByIdAndUpdate(appointment._id, { reported: true });
+    });
+    // add 7 days to the date of their appointment
+    // check if an appointment after 7 days exist or not
+    // affect
+    if (appointments.length === 0) {
+      return res.status(200).json({ message: 'no appointment to report' });
+    }
+    return res.status(200).json({ message: 'appointment reported' });
+  } catch (err) {
+    console.log(err);
+  }
+});
 module.exports = router;
