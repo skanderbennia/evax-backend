@@ -70,7 +70,7 @@ app.use('/vaccine', vaccineController);
 app.use('/vaccinecenter', vaccinecenterController);
 
 // Server
-const port = 4000 || process.env.port;
+const { port } = process.env;
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
