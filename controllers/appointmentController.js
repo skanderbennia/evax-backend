@@ -163,7 +163,12 @@ router.get('/report', async (req, res, next) => {
     // check if an appointment after 7 days exist or not
     // affect
     if (appointments.length === 0) {
-      return res.status(200).json({ message: 'no appointment to report' });
+      return res
+        .status(200)
+        .json({
+          message:
+            'no appointment to report or no free appointment please generate',
+        });
     }
     return res.status(200).json({ message: 'appointment reported' });
   } catch (err) {
