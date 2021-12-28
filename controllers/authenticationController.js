@@ -104,16 +104,22 @@ router.post('/register', async (req, res) => {
     });
     citizen.save();
 
-    let message =
+    const message =
       'Vous êtes désormais inscrit à Evax. Vous recevrez bientot la date de votre rendez-vous de vaccination';
 
-    sendMail(req.body.email, message, (err, data) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log('success');
+    sendMail(
+      'evaxdelatunisie@gmail.com',
+      req.body.email,
+      "Création d'une compte",
+      message,
+      (err, data) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log('success');
+        }
       }
-    });
+    );
     res.status(201).json({
       message: 'Registration successfull',
     });
