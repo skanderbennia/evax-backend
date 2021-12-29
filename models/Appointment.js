@@ -9,6 +9,10 @@ const appointmentSchema = mongoose.Schema({
     type: String,
     required: [true],
   },
+  reported: {
+    type: Boolean,
+    default: false,
+  },
   center_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'center',
