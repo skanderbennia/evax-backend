@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Appointment = require('../models/Appointment');
 const Report = require('../models/Report');
+const User = require('../models/User');
+const sendMail = require('../utils/mailer');
 
 const router = express.Router();
 /**
@@ -48,6 +50,19 @@ router.post('/book', async (req, res, next) => {
     const transformDate = new Date(
       new Date(date_suggestion).getTime() + 86400000 * 2
     );
+    const user = await User.findById(user_id);
+    if (!user) {
+      return res.status(404).json({ message: 'user not found' });
+    }
+    const user_got_appointment = await Appointment.find({
+      reported: false,
+      user_id: { $ne: null },
+    });
+    if (user_got_appointment) {
+      return res
+        .status(404)
+        .json({ message: 'you already have an appointment' });
+    }
     const appointment_free = await Appointment.findOneAndUpdate(
       {
         user_id: null,
@@ -57,8 +72,23 @@ router.post('/book', async (req, res, next) => {
       { user_id },
       { new: true }
     );
+    if (!appointment_free) {
+      return res
+        .status(404)
+        .json({ message: 'there is no appointment for this date' });
+    }
+    console.log(appointment_free);
+    sendMail(
+      'evaxdelatunisie@gmail.com',
+      user.email,
+      'Prise de rendez-vous',
+      `la date de votre prochain rendez-vous sera ${appointment_free.date.toDateString()}à ${
+        appointment_free.time
+      }`
+    );
     res.status(200).json({ data: appointment_free });
   } catch (err) {
+    console.log(err);
     res.status(500).send(err);
   }
 });

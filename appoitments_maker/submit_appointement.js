@@ -95,10 +95,10 @@ router.post('/center', async (req, res, next) => {
       k <= date_fin_timestamp.getTime();
       k += 86400000
     ) {
-      date_already_created.push(new Date(k));
       Appointment.find({ date: new Date(k) })
         .limit(1)
         .then((result) => {
+          console.log(result.length);
           if (result.length === 0) {
             for (let i = 0; i < 20; i += 1) {
               // number of person per appointment
@@ -117,6 +117,9 @@ router.post('/center', async (req, res, next) => {
                 appointment.save();
               }
             }
+          } else {
+            date_already_created.push(new Date(k));
+            console.log(date_already_created);
           }
         });
       // number of appointment per day
