@@ -66,8 +66,16 @@ const router = express.Router();
  *       content:
  *         application/json:
  *           schema:
- *             type: string
- *             example: appointement created !
+ *             type: object
+ *             properties:
+ *               message:
+ *                  type: string
+ *                  example: appointment created !
+ *               date_already_created:
+ *                  type: array
+ *                  items:
+ *                    type: string
+ *                    example: 2021-12-23T00:00:00.000Z
  *
  */
 router.post('/center', async (req, res, next) => {
