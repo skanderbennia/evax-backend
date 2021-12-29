@@ -102,13 +102,8 @@ router.get('/:id', async (req, res) => {
  */
 router.put('/:id', async (req, res) => {
   const updateObject = req.body;
-  console.log(updateObject);
-  //find citizen by id
   const citizen = await Citizen.findById(req.params.id).populate('user');
-  console.log(citizen);
-  // find the related user
   const user = citizen.user;
-  console.log(user.id);
 
   const filter = {
     _id: user.id,

@@ -177,9 +177,17 @@ router.post('/login', async (req, res) => {
   const signToken = (id, role) =>
     jwt.sign({ id, role }, process.env.JWT_SECRET);
   const token = signToken(user._id, user.role);
+  let citizen = {};
+  if (user.role == 'citizen') {
+    citizen = await Citizen.findOne({
+      user: user._id,
+    });
+    console.log(citizen.id);
+  }
   res.status(201).send({
     token,
     userInformation: user,
+    citizen_id: citizen.id,
   });
 });
 
