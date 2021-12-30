@@ -74,7 +74,7 @@ router.post('/book', async (req, res, next) => {
     );
     if (!appointment_free) {
       return res
-        .status(404)
+        .status(200)
         .json({ message: 'there is no appointment for this date' });
     }
     console.log(appointment_free);
@@ -86,7 +86,11 @@ router.post('/book', async (req, res, next) => {
         appointment_free.time
       }`
     );
-    res.status(200).json({ data: appointment_free });
+    res.status(200).json({
+      message:
+        'You have just received the date and time of your appointment by email. Please check your inbox',
+      data: appointment_free,
+    });
   } catch (err) {
     console.log(err);
     res.status(500).send(err);
