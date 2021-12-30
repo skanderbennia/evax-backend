@@ -56,9 +56,10 @@ router.post('/book', async (req, res, next) => {
     }
     const user_got_appointment = await Appointment.find({
       reported: false,
-      user_id: { $ne: null },
+      user_id: user_id,
     });
-    if (user_got_appointment) {
+
+    if (user_got_appointment.length != 0) {
       return res
         .status(404)
         .json({ message: 'you already have an appointment' });

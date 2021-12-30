@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const Citizen = require('../models/Citizen');
+const Report = require('../models/Report');
 const User = require('../models/User');
 
 /**
@@ -124,4 +125,45 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /Citizen/{id}/report:
+ *  get:
+ *    summary: Returns the Citizen's report by id
+ *    tags: [Citizen]
+ *    parameters:
+ *      - in : path
+ *        name: id
+ *        schema:
+ *          type: string
+ *        required: true
+ 
+ *    responses:
+ *      201:
+ *        description: The Citizen's report by id
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                $ref: '#/components/schemas/Citizen'
+ *      404:
+ *        description: no Citizens
+ *
+ */
+
+router.get('/:id/report', async (req, res) => {
+  try {
+    const citizen = await Citizen.findById(req.params.id).populate('user');
+
+    const report = await Report.find({
+      user_id: citizen.user._id,
+    }).populate('user_id vaccin_id appointment_id');
+    res.status(200).json({ data: report });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+});
 module.exports = router;
