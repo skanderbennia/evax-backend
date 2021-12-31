@@ -10,6 +10,10 @@ const operatorSchema = mongoose.Schema({
     ref: 'center',
     default: null,
   },
+  password: {
+    type: String,
+    required: true,
+  },
 });
 
 const Operator = mongoose.model('operators', operatorSchema);

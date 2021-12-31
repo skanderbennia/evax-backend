@@ -2,10 +2,12 @@ const router = require('express').Router();
 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const generatePassowrd = require('generate-password');
 const User = require('../models/User');
+const Password = require('../models/Password');
 const Citizen = require('../models/Citizen');
+const Operator = require('../models/Operator');
 const sendMail = require('../utils/mailer');
-
 /**
  * @swagger
  * components:
@@ -84,15 +86,13 @@ router.post('/register', async (req, res) => {
     });
 
   // hash the password
-  const salt = await bcrypt.genSalt(10);
-  const password = await bcrypt.hash(req.body.password, salt);
 
   const user = new User({
     name: req.body.name,
     email: req.body.email,
     phone: req.body.phone,
     role: req.body.role,
-    password,
+    // password,
   });
 
   try {
@@ -110,7 +110,7 @@ router.post('/register', async (req, res) => {
     sendMail(
       'evaxdelatunisie@gmail.com',
       req.body.email,
-      "Création d'une compte",
+      "Création d'un compte",
       message,
       (err, data) => {
         if (err) {
@@ -132,7 +132,7 @@ router.post('/register', async (req, res) => {
 
 /**
  * @swagger
- * /auth/login:
+ * /auth/login-step-1:
  *  post:
  *   summary: Creates a new User
  *   tags: [Authentication]
@@ -155,40 +155,197 @@ router.post('/register', async (req, res) => {
  *               $ref: '#/components/schemas/User'
  *
  */
-router.post('/login', async (req, res) => {
-  const user = await User.findOne({
-    email: req.body.email,
-  });
+router.post('/login-step-1', async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({
+      email,
+    });
 
+    // throw error when email is wrong
+    if (!user)
+      return res.status(400).json({
+        message: 'Email is wrong',
+      });
+    const salt = await bcrypt.genSalt(10);
+
+    const generatedPassword = generatePassowrd.generate({
+      length: 6,
+      number: true,
+    });
+    const password = await bcrypt.hash(generatedPassword, salt);
+    const passwordModel = await Password.create({ value: password });
+    await Citizen.findOneAndUpdate(
+      { user: user._id },
+      { password: passwordModel._id }
+    );
+    sendMail(
+      'evaxdelatunisie@gmail.com',
+      req.body.email,
+      "Generation d'un mot de passe",
+      `Voici votre code de connexion :  ${generatedPassword}`,
+      (err, data) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log('success');
+        }
+      }
+    );
+    res.status(200).json({ message: 'password generated !' });
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
+});
+/**
+ * @swagger
+ * /auth/login-step-2:
+ *  post:
+ *   summary: login using password
+ *   tags: [Authentication]
+ *
+ *   requestBody:
+ *    required: true
+ *    content:
+ *      application/json:
+ *        schema:
+ *          type: object
+ *          properties:
+ *              email:
+ *                type: string
+ *                example: boumenjel51@gmail.com
+ *              password:
+ *                type: string
+ *                example: Hdk1Fe
+ *
+ *   responses:
+ *     200:
+ *       description: Login was successful
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *                token:
+ *                  type: string
+ *                  example: sdfqsdfdfsdfdqsfqdsfqsdfsq
+ *                userInformation:
+ *                  type: object
+ *                  $ref: '#/components/schemas/User'
+ *                citizen_id:
+ *                  type: string
+ *                  example: 61cedd6739fd3e82cb7b831e
+ *
+ */
+router.post('/login-step-2', async (req, res) => {
+  // check for password
+  const { email } = req.body;
+  const user = await User.findOne({
+    email,
+  });
+  const citizen = await Citizen.findOne({
+    user: user._id,
+  }).populate('password');
   // throw error when email is wrong
   if (!user)
     return res.status(400).json({
-      message: 'Email or password are wrong',
+      message: 'Email is wrong',
     });
-
-  // check for password
-  const validPassword = await bcrypt.compare(req.body.password, user.password);
+  if (!citizen.password) {
+    return res.status(400).json({ message: 'password has been expired' });
+  }
+  const validPassword = await bcrypt.compare(
+    req.body.password,
+    citizen.password.value
+  );
   if (!validPassword)
     return res.status(400).json({
-      message: 'Email or password are wrong',
+      message: 'password is wrong',
     });
 
   // create token
   const signToken = (id, role) =>
     jwt.sign({ id, role }, process.env.JWT_SECRET);
   const token = signToken(user._id, user.role);
-  let citizen = {};
-  if (user.role == 'citizen') {
-    citizen = await Citizen.findOne({
-      user: user._id,
-    });
-    console.log(citizen.id);
-  }
+
   res.status(201).send({
     token,
     userInformation: user,
     citizen_id: citizen.id,
   });
 });
+/**
+ * @swagger
+ * /auth/login-operator:
+ *  post:
+ *   summary: login operator
+ *   tags: [Authentication]
+ *
+ *   requestBody:
+ *    required: true
+ *    content:
+ *      application/json:
+ *        schema:
+ *          type: object
+ *          properties:
+ *              email:
+ *                type: string
+ *                example: mohamedskander.bennia@gmail.com
+ *              password:
+ *                type: string
+ *                example: 12345678
+ *
+ *   responses:
+ *     200:
+ *       description: Login was successful
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *                token:
+ *                  type: string
+ *                  example: sdfqsdfdfsdfdqsfqdsfqsdfsq
+ *                userInformation:
+ *                  type: object
+ *                  $ref: '#/components/schemas/User'
+ *                operator_id:
+ *                  type: string
+ *                  example: 61cedd6739fd3e82cb7b831e
+ *
+ */
+router.post('/login-operator', async (req, res) => {
+  // check for password
+  const { email, password } = req.body;
+  const user = await User.findOne({
+    email,
+  });
 
+  const operator = await Operator.findOne({
+    user: user._id,
+  });
+ 
+  // throw error when email is wrong
+  if (!user)
+    return res.status(400).json({
+      message: 'Email is wrong',
+    });
+  
+  const validPassword = await bcrypt.compare(password, operator.password);
+  if (!validPassword)
+    return res.status(400).json({
+      message: 'password is wrong',
+    });
+
+  // create token
+  const signToken = (id, role) =>
+    jwt.sign({ id, role }, process.env.JWT_SECRET);
+  const token = signToken(user._id, user.role);
+
+  res.status(201).send({
+    token,
+    userInformation: user,
+    operator_id: operator._id,
+  });
+});
 module.exports = router;

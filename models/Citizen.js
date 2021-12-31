@@ -10,6 +10,12 @@ const citizenSchema = mongoose.Schema({
     ref: 'User',
     default: null,
   },
+  password: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Password',
+    default: null,
+  },
+  w,
 });
 
 const Citizen = mongoose.model('citizens', citizenSchema);
