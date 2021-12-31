@@ -54,10 +54,11 @@ router.post('/book', async (req, res, next) => {
     if (!user) {
       return res.status(404).json({ message: 'user not found' });
     }
-    const user_got_appointment = await Appointment.find({
+    let query = {
       reported: false,
       user_id: user_id,
-    });
+    };
+    const user_got_appointment = await Appointment.find(query);
 
     if (user_got_appointment.length != 0) {
       return res
