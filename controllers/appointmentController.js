@@ -61,12 +61,10 @@ router.post('/book', async (req, res, next) => {
     const user_got_appointment = await Appointment.find(query);
 
     if (user_got_appointment.length != 0) {
-      return res
-        .status(404)
-        .json({
-          message: 'you already have an appointment',
-          data: user_got_appointment,
-        });
+      return res.status(404).json({
+        message: 'you already have an appointment',
+        data: user_got_appointment,
+      });
     }
     const appointment_free = await Appointment.findOneAndUpdate(
       {

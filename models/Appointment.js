@@ -15,7 +15,7 @@ const appointmentSchema = mongoose.Schema({
   },
   center_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'center',
+    ref: 'centers',
     default: null,
   },
   user_id: {

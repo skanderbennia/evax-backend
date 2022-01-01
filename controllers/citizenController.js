@@ -156,9 +156,35 @@ router.get('/:id/report', async (req, res) => {
   try {
     const citizen = await Citizen.findById(req.params.id).populate('user');
 
+    /*const report = await Report.find({
+      user_id: citizen.user._id,
+    })
+      .populate({ path: 'user_id', select: ['_id'] })
+      .populate({ path: 'vaccin_id', select: ['_id'] })
+      .populate({
+        path: 'appointment_id',
+        populate: {
+          path: 'centers',
+        },
+      });*/
+
     const report = await Report.find({
       user_id: citizen.user._id,
-    }).populate('user_id vaccin_id appointment_id');
+    }).populate([
+      {
+        path: 'user_id',
+      },
+      {
+        path: 'vaccin_id',
+      },
+      {
+        path: 'appointment_id',
+        populate: {
+          path: 'center_id',
+        },
+      },
+    ]);
+
     res.status(200).json({ data: report });
   } catch (error) {
     res.status(500).json({
