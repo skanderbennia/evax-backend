@@ -7,7 +7,7 @@ const Password = mongoose.model(
       type: String,
       required: true,
     },
-    createdAt: { type: Date, expires: '2m', default: Date.now },
+    createdAt: { type: Date, expires: '10m', default: Date.now },
   })
 );
 module.exports = Password;

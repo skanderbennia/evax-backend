@@ -15,7 +15,6 @@ const citizenSchema = mongoose.Schema({
     ref: 'Password',
     default: null,
   },
-  w,
 });
 
 const Citizen = mongoose.model('citizens', citizenSchema);
