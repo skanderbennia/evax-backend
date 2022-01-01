@@ -104,7 +104,7 @@ router.get('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
   const updateObject = req.body;
   const citizen = await Citizen.findById(req.params.id).populate('user');
-  const user = citizen.user;
+  const { user } = citizen;
 
   const filter = {
     _id: user.id,
@@ -112,7 +112,7 @@ router.put('/:id', async (req, res) => {
 
   try {
     const user_updated = await User.findOneAndUpdate(filter, updateObject);
-    console.log(user_updated);
+
     if (!user_updated) {
       res.status(404).json({ message: 'User not found' });
     }

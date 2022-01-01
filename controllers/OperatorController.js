@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 const Operator = require('../models/Operator');
 const User = require('../models/User');
 const sendMail = require('../utils/mailer');
@@ -72,11 +73,21 @@ const sendMail = require('../utils/mailer');
 router.post('/', async (req, res) => {
   const session = await mongoose.startSession();
   try {
+    const { email, name, phone, address, role, password } = req.body;
     await session.withTransaction(async () => {
-      const user_account = await User.create(req.body);
+      const user_account = await User.create({
+        email,
+        name,
+        phone,
+        address,
+        role,
+      });
+      const salt = await bcrypt.genSalt(10);
 
+      const passwordcrypt = await bcrypt.hash(password, salt);
       const new_operator = await Operator.create({
         user_id: user_account._id,
+        password: passwordcrypt,
       });
       const created_operator = await Operator.findById(
         new_operator._id
