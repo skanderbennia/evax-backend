@@ -321,16 +321,16 @@ router.post('/login-operator', async (req, res) => {
     email,
   });
 
-  const operator = await Operator.findOne({
-    user: user._id,
-  });
- 
   // throw error when email is wrong
   if (!user)
     return res.status(400).json({
       message: 'Email is wrong',
     });
-  
+
+  const operator = await Operator.findOne({
+    user: user._id,
+  });
+
   const validPassword = await bcrypt.compare(password, operator.password);
   if (!validPassword)
     return res.status(400).json({
