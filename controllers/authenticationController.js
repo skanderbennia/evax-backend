@@ -323,8 +323,6 @@ router.post('/login-operator', async (req, res) => {
   const user = await User.findOne({
     email,
   });
-
-  // throw error when email is wrong
   if (!user)
     return res.status(400).json({
       message: 'Email is wrong',
@@ -333,6 +331,8 @@ router.post('/login-operator', async (req, res) => {
   const operator = await Operator.findOne({
     user: user._id,
   });
+
+  // throw error when email is wrong
 
   const validPassword = await bcrypt.compare(password, operator.password);
   if (!validPassword)
