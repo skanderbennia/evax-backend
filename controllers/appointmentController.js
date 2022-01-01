@@ -22,13 +22,13 @@ const router = express.Router();
  *          properties:
  *              center_id:
  *                type: string
- *                example: 61c43f9b06fdbbe91b55c3b2
+ *                example: 61c0651d8a4a6dbe765ecc96
  *              date_suggestion:
  *                 type: string
  *                 example: 2021-12-22
  *              user_id:
  *                 type: string
- *                 example: 61c43f9b06fdbbe91b55c3b2
+ *                 example: 61d045db3e56df0fcec48471
  *
  *   responses:
  *     200:
@@ -54,13 +54,14 @@ router.post('/book', async (req, res, next) => {
     if (!user) {
       return res.status(404).json({ message: 'user not found' });
     }
-    let query = {
+    const query = {
       reported: false,
-      user_id: user_id,
+      validated: false,
+      user_id,
     };
     const user_got_appointment = await Appointment.find(query);
 
-    if (user_got_appointment.length != 0) {
+    if (user_got_appointment.length !== 0) {
       return res
         .status(404)
         .json({ message: 'you already have an appointment' });
@@ -114,7 +115,7 @@ router.post('/book', async (req, res, next) => {
  *                example: 61c43f9b06fdbbe91b55c3b2
  *              vaccin_id:
  *                 type: string
- *                 example: 61c43f9b06fdbbe91b55c3b2
+ *                 example: 61c1f91f212ef4299e572c11
  *
  *   responses:
  *     200:
@@ -130,7 +131,9 @@ router.post('/validate', async (req, res, next) => {
     const session = await mongoose.startSession();
 
     const { appointment_id, vaccin_id } = req.body;
-    const appointment = await Appointment.findById(appointment_id);
+    const appointment = await Appointment.findByIdAndUpdate(appointment_id, {
+      validated: true,
+    });
     if (!appointment) {
       return res.status(404).json({ message: 'Appointment not found' });
     }
@@ -163,6 +166,8 @@ router.get('/all', async (req, res, next) => {
   try {
     const appointments = await Appointment.find({
       user_id: { $ne: null },
+      validated: false,
+      reported: false,
     }).populate('user_id');
     res.status(200).json(appointments);
   } catch (err) {

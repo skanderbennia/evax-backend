@@ -51,7 +51,7 @@ const router = express.Router();
  *          properties:
  *              center_id:
  *                type: string
- *                example: 61c43f9b06fdbbe91b55c3b2
+ *                example: 61c0651d8a4a6dbe765ecc96
  *              date_debut:
  *                 type: string
  *                 example: 2021-12-22
