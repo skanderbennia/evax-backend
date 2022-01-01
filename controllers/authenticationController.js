@@ -243,14 +243,17 @@ router.post('/login-step-2', async (req, res) => {
   const user = await User.findOne({
     email,
   });
-  const citizen = await Citizen.findOne({
-    user: user._id,
-  }).populate('password');
+
   // throw error when email is wrong
   if (!user)
     return res.status(400).json({
       message: 'Email is wrong',
     });
+
+  const citizen = await Citizen.findOne({
+    user: user._id,
+  }).populate('password');
+
   if (!citizen.password) {
     return res.status(400).json({ message: 'password has been expired' });
   }
