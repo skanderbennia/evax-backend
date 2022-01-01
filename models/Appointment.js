@@ -13,6 +13,10 @@ const appointmentSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  validated: {
+    type: Boolean,
+    default: false,
+  },
   center_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'centers',
