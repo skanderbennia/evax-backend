@@ -22,6 +22,7 @@ const { protect, restrictTo } = require('./controllers/auth-security');
 const test = require('./controllers/test');
 const submitAppointement = require('./appoitments_maker/submit_appointement');
 const appointmentController = require('./controllers/appointmentController');
+const stats = require('./controllers/Stats');
 
 dotenv.config();
 
@@ -68,6 +69,8 @@ app.use('/contact', contactController);
 app.use('/pharmacy', pharmacyController);
 app.use('/vaccine', vaccineController);
 app.use('/vaccinecenter', vaccinecenterController);
+
+app.use('/stats', stats);
 
 // Server
 const { PORT } = process.env;
