@@ -1,5 +1,6 @@
 const express = require('express');
 const Appointment = require('../models/Appointment');
+const Center = require('../models/Center');
 
 const router = express.Router();
 /**
@@ -85,6 +86,8 @@ router.post('/center', async (req, res, next) => {
     const { center_id, date_debut, date_fin } = req.body;
     const date_debut_timestamp = new Date(date_debut);
     const date_fin_timestamp = new Date(date_fin);
+    const center = await Center.findById(center_id);
+
     // create apponitment with time and date and add the users and the center id
     if (!date_debut) {
       return res.status(500);
@@ -113,6 +116,7 @@ router.post('/center', async (req, res, next) => {
                   date: new Date(k),
                   time: timeRendezVous,
                   center_id,
+                  center_name: center.id,
                 });
                 appointment.save();
               }
