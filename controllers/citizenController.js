@@ -31,6 +31,27 @@ const User = require('../models/User');
  *           description: The Citizen phone number
  *
  */
+/**
+ * @swagger
+ * /Citizen/all:
+ *   get:
+ *     tags: [Citizen]
+ *     description: Get all Citizen
+ *     responses:
+ *       201:
+ *         description: Success
+ *
+ */
+router.get('/all', async (req, res) => {
+  try {
+    const citizen = await Citizen.find().populate('user');
+    res.json(citizen);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+});
 
 /**
  * @swagger
