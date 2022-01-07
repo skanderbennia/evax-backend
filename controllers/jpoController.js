@@ -79,7 +79,7 @@ router.post('/', (req, res) => {
 router.get('/all', async (req, res) => {
   try {
     const jpo = await Jpo.find().populate('center_id');
-    console.log(jpo);
+
     res.json(jpo);
   } catch (error) {
     res.status(500).json({
@@ -139,7 +139,6 @@ router.get('/getJpo/:id', async (req, res) => {
     }
     res.status(200).json(jpo);
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       message: error.message,
     });
@@ -191,7 +190,6 @@ router.put('/:id', async (req, res) => {
       message: 'jpo updated with success',
     });
   } catch (err) {
-    console.log(err);
     res.status(500).send(err);
   }
 });

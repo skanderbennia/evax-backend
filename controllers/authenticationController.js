@@ -115,8 +115,6 @@ router.post('/register', async (req, res) => {
       (err, data) => {
         if (err) {
           console.log(err);
-        } else {
-          console.log('success');
         }
       }
     );
@@ -184,13 +182,7 @@ router.post('/login-step-1', async (req, res) => {
       req.body.email,
       "Generation d'un mot de passe",
       `Voici votre code de connexion :  ${generatedPassword}`,
-      (err, data) => {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log('success');
-        }
-      }
+      (err, data) => {}
     );
     res.status(200).json({ message: 'password generated !' });
   } catch (err) {

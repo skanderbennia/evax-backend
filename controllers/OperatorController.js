@@ -97,9 +97,7 @@ router.post('/', async (req, res) => {
         user_account.email,
         'Contact',
         `your password : ${req.body.password}`,
-        (err, data) => {
-          console.log(data);
-        }
+        (err, data) => {}
       );
       res.status(200).json({ operator: created_operator });
     });

@@ -58,6 +58,22 @@ describe('Jpo Crud', () => {
     expect(res.status).to.equal(200);
     expect(res.body).to.be.a('object');
   });
+  it('GET BY ID jpo - Success', async () => {
+    const res = await request(app)
+      .get(`/jpo/getJpo/${id}`)
+      .set('content-type', 'application/json');
+
+    expect(res.status).to.equal(200);
+    expect(res.body).to.be.a('object');
+  });
+  it('GET BY ID jpo - Error', async () => {
+    const res = await request(app)
+      .get(`/jpo/getJpo/61b6a132189fa2786b81eee8`)
+      .set('content-type', 'application/json');
+
+    expect(res.status).to.equal(404);
+    expect(res.body).to.be.a('object');
+  });
   it('GET BY ID jpo - Wrong ID', async () => {
     const res = await request(app)
       .get(`/jpo/61c378a52b06aeba5593ed5c`)
