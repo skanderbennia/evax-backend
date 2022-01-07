@@ -4,6 +4,7 @@ const Center = require('../models/Center');
 const Volunteer = require('../models/Volunteer');
 const Operator = require('../models/Operator');
 const Citizen = require('../models/Citizen');
+const Report = require('../models/Report');
 
 /**
  * @swagger
@@ -43,7 +44,7 @@ const Citizen = require('../models/Citizen');
  */
 router.get('/', async (req, res) => {
   try {
-    const all_vaccinated = await Appointment.count({
+    const all_appointments_with_users = await Appointment.count({
       user_id: { $ne: null },
     });
 
@@ -71,14 +72,29 @@ router.get('/', async (req, res) => {
     });
 
     const all_citizens = await Citizen.count();
+    const vaccinated_citizens = await Report.aggregate([
+      {
+        $group: {
+          _id: '$user_id',
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $match: {
+          count: { $gt: 1 },
+        },
+      },
+    ]);
 
-    res.json([
-      all_vaccinated,
+    res.json({
+      all_citizens,
+      all_appointments_with_users,
+      vaccinated_citizens,
       appointments_per_center,
       vaccinated_by_center,
       volunteers_by_association,
-      operators,
-    ]);
+      all_operators,
+    });
   } catch (error) {
     res.status(500).json({
       message: error.message,
