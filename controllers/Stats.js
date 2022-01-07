@@ -52,7 +52,14 @@ router.get('/', async (req, res) => {
       { $group: { _id: '$center_id', Appointments: { $sum: 1 } } },
     ]);
 
-    const vaccinated_by_center = await Appointment.aggregate([
+    appointments_per_center.forEach(async (element) => {
+      const c = Center.findById(element._id.valueOf())
+        .exec()
+        .then((items) => console.log(items))
+        .catch((err) => {});
+    });
+
+    const vaccinated_citizens_by_center = await Appointment.aggregate([
       {
         $group: {
           _id: '$center_id',
@@ -72,7 +79,7 @@ router.get('/', async (req, res) => {
     });
 
     const all_citizens = await Citizen.count();
-    const vaccinated_citizens = await Report.aggregate([
+    const vaccinated_citizens_all_times = await Report.aggregate([
       {
         $group: {
           _id: '$user_id',
@@ -89,9 +96,9 @@ router.get('/', async (req, res) => {
     res.json({
       all_citizens,
       all_appointments_with_users,
-      vaccinated_citizens,
+      vaccinated_citizens_all_times,
       appointments_per_center,
-      vaccinated_by_center,
+      vaccinated_citizens_by_center,
       volunteers_by_association,
       all_operators,
     });
