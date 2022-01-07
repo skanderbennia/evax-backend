@@ -80,7 +80,7 @@ router.post('/book', async (req, res, next) => {
         .status(404)
         .json({ message: 'there is no appointment for this date' });
     }
-    console.log(appointment_free);
+
     sendMail(
       'evaxdelatunisie@gmail.com',
       user.email,
@@ -91,7 +91,6 @@ router.post('/book', async (req, res, next) => {
     );
     res.status(200).json({ data: appointment_free });
   } catch (err) {
-    console.log(err);
     res.status(500).send(err);
   }
 });
@@ -183,7 +182,7 @@ router.get('/report', async (req, res, next) => {
       reported: false,
       user_id: { $ne: null },
     });
-    console.log(appointments);
+
     appointments.forEach(async (appointment) => {
       await Appointment.findOneAndUpdate(
         {

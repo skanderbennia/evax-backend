@@ -101,7 +101,6 @@ router.post('/center', async (req, res, next) => {
       Appointment.find({ date: new Date(k) })
         .limit(1)
         .then((result) => {
-          console.log(result.length);
           if (result.length === 0) {
             for (let i = 0; i < 20; i += 1) {
               // number of person per appointment
@@ -109,9 +108,7 @@ router.post('/center', async (req, res, next) => {
                 const timeRendezVous = new Date(1800000 * (i + 14))
                   .toString()
                   .split(' ')[4];
-                // console.log(
-                //   `${new Date(k).toISOString().split('T')[0]} ${timeRendezVous}`
-                // );
+
                 const appointment = Appointment({
                   date: new Date(k),
                   time: timeRendezVous,
@@ -123,12 +120,9 @@ router.post('/center', async (req, res, next) => {
             }
           } else {
             date_already_created.push(new Date(k));
-            console.log(date_already_created);
           }
         });
       // number of appointment per day
-
-      // console.log(new Date(k).toISOString().split('T')[0]);
     }
     res
       .status(200)

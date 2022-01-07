@@ -19,7 +19,6 @@ const vaccinecenterController = require('./controllers/VaccineCenterController')
 const authentication = require('./controllers/authenticationController');
 const contactController = require('./controllers/contactController');
 const { protect, restrictTo } = require('./controllers/auth-security');
-const test = require('./controllers/test');
 const submitAppointement = require('./appoitments_maker/submit_appointement');
 const appointmentController = require('./controllers/appointmentController');
 const stats = require('./controllers/Stats');
@@ -62,7 +61,6 @@ app.use('/centers', centerConroller);
 app.use('/jpo', jpoConroller);
 app.use('/volunteers', volunteerController);
 app.use('/auth', authentication);
-app.use('/test', protect, restrictTo('admin'), test);
 app.use('/operator', operatorController);
 app.use('/citizen', citizenController);
 app.use('/contact', contactController);
