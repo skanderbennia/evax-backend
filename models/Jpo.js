@@ -10,7 +10,7 @@ const jpoSchema = mongoose.Schema({
   volunteers_id: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'volunteers',
+      ref: 'volunteer',
       default: null,
     },
   ],

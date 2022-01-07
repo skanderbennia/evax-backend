@@ -78,7 +78,8 @@ router.post('/', (req, res) => {
  */
 router.get('/all', async (req, res) => {
   try {
-    const jpo = await Jpo.find();
+    const jpo = await Jpo.find().populate('center_id');
+    console.log(jpo);
     res.json(jpo);
   } catch (error) {
     res.status(500).json({
@@ -121,6 +122,24 @@ router.get('/:id', async (req, res) => {
     }
     res.status(200).json(jpo);
   } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+});
+
+router.get('/getJpo/:id', async (req, res) => {
+  try {
+    const jpo = await Jpo.findById(req.params.id).populate(
+      'center_id volunteers_id'
+    );
+
+    if (!jpo) {
+      return res.status(404).json({ message: 'Jpo not found' });
+    }
+    res.status(200).json(jpo);
+  } catch (error) {
+    console.log(error);
     res.status(500).json({
       message: error.message,
     });
@@ -172,6 +191,7 @@ router.put('/:id', async (req, res) => {
       message: 'jpo updated with success',
     });
   } catch (err) {
+    console.log(err);
     res.status(500).send(err);
   }
 });
