@@ -52,13 +52,6 @@ router.get('/', async (req, res) => {
       { $group: { _id: '$center_id', Appointments: { $sum: 1 } } },
     ]);
 
-    appointments_per_center.forEach(async (element) => {
-      const c = Center.findById(element._id.valueOf())
-        .exec()
-        .then((items) => console.log(items))
-        .catch((err) => {});
-    });
-
     const vaccinated_citizens_by_center = await Appointment.aggregate([
       {
         $group: {
