@@ -249,13 +249,12 @@ router.get('/report', async (req, res, next) => {
  */
 router.get('/delayed', async (req, res, next) => {
   try {
+    const sysdat = new Date();
     const reported = await Appointment.find({
       date: { $lte: sysdat },
       reported: false,
       user_id: { $ne: null },
     });
-    if (reported.length === 0)
-      return res.status(200).json({ message: 'no delayed appointment' });
     return res.status(200).json({ length: reported.length });
   } catch (err) {
     console.log(err);
