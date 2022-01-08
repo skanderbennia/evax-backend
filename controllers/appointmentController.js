@@ -173,6 +173,25 @@ router.get('/all', async (req, res, next) => {
     res.status(500).send(err);
   }
 });
+/**
+ * @swagger
+ * /appointments/report:
+ *   get:
+ *     tags: [Appointment]
+ *     description: Report all the delayed appointment
+ *     responses:
+ *       201:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: appointment reported
+ *
+ */
 router.get('/report', async (req, res, next) => {
   try {
     const sysdat = new Date();
@@ -182,7 +201,12 @@ router.get('/report', async (req, res, next) => {
       reported: false,
       user_id: { $ne: null },
     });
-
+    if (appointments.length === 0) {
+      return res.status(200).json({
+        message:
+          'no appointment to report or no free appointment please generate',
+      });
+    }
     appointments.forEach(async (appointment) => {
       await Appointment.findOneAndUpdate(
         {
@@ -198,13 +222,41 @@ router.get('/report', async (req, res, next) => {
     // add 7 days to the date of their appointment
     // check if an appointment after 7 days exist or not
     // affect
-    if (appointments.length === 0) {
-      return res.status(200).json({
-        message:
-          'no appointment to report or no free appointment please generate',
-      });
-    }
+
     return res.status(200).json({ message: 'appointment reported' });
+  } catch (err) {
+    console.log(err);
+  }
+});
+/**
+ * @swagger
+ * /appointments/deplayed:
+ *   get:
+ *     tags: [Appointment]
+ *     description: Get all delayed Appointments
+ *     responses:
+ *       201:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                length:
+ *                  type: integer
+ *                  example: 20
+ *
+ */
+router.get('/delayed', async (req, res, next) => {
+  try {
+    const reported = await Appointment.find({
+      date: { $lte: sysdat },
+      reported: false,
+      user_id: { $ne: null },
+    });
+    if (reported.length === 0)
+      return res.status(200).json({ message: 'no delayed appointment' });
+    return res.status(200).json({ length: reported.length });
   } catch (err) {
     console.log(err);
   }
