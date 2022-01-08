@@ -230,7 +230,7 @@ router.get('/report', async (req, res, next) => {
 });
 /**
  * @swagger
- * /appointments/deplayed:
+ * /appointments/delayed:
  *   get:
  *     tags: [Appointment]
  *     description: Get all delayed Appointments
